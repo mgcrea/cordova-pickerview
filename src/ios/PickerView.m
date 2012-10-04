@@ -109,7 +109,7 @@
 	// Resize actionSheet was 360
 	float actionSheetHeight;
 	int systemMajorVersion = [[[[UIDevice currentDevice].systemVersion componentsSeparatedByString:@"."] objectAtIndex:0] integerValue];
-	if(systemMajorVersion == 5) {
+	if(systemMajorVersion >= 5) {
 		actionSheetHeight = 360.0f;
 	} else {
 		actionSheetHeight = 472.0f;
