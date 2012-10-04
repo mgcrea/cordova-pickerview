@@ -1,7 +1,8 @@
 //
 //  PickerView.m
 //
-// Created by Olivier Louvignes on 2011-11-28.
+// Created by Olivier Louvignes on 2011-11-28
+// Updated on 2012-08-04 for Cordova ARC-2.1+
 //
 // Copyright 2011-2012 Olivier Louvignes. All rights reserved.
 // MIT Licensed
@@ -79,7 +80,6 @@
 
 	// Append pickerView
 	[self.actionSheet addSubview:self.pickerView];
-	self.pickerView;
 
 	// Create segemented cancel button
 	UISegmentedControl *cancelButton = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObject:cancelButtonLabel]];
@@ -133,7 +133,6 @@
 
 	// Append pickerView
 	[popoverView addSubview:self.pickerView];
-	self.pickerView;
 
 	/*
 	 UIBarButtonItem *okButton = [[UIBarButtonItem alloc] initWithTitle:@"Ok" style:UIBarButtonItemStyleBordered target:self action:@selector(okayButtonPressed)];
