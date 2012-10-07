@@ -8,6 +8,7 @@
 // MIT Licensed
 
 #import "PickerView.h"
+#import <Cordova/CDVDebug.h>
 
 // Private interface
 @interface PickerView()
@@ -24,10 +25,33 @@
 @synthesize popoverController = _popoverController;
 @synthesize items = _items;
 
+- (int)getComponentWithName:(NSString * )name {
+	for(int i = 0; i < [self.items count]; i++) {
+        NSDictionary *slot = [self.items objectAtIndex:i];
+		if([name isEqualToString:[slot objectForKey:@"name"]]) {
+			return i;
+		}
+    }
+	return -1;
+}
+
+- (int)getRowWithValue:(NSString *)value inComponent:(int)i {
+	NSArray *slotData = [[self.items objectAtIndex:i] objectForKey:@"data"];
+	for(int j = 0; j < [slotData count]; j++) {
+		NSDictionary *slotDataItem = [slotData objectAtIndex:j];
+		NSString *slotDataItemValue = [NSString stringWithFormat:@"%@", [slotDataItem objectForKey:@"value"]];
+		if([slotDataItemValue isEqualToString:value]) {
+			return j;
+		}
+	}
+	return -1;
+}
+
 - (void)create:(CDVInvokedUrlCommand*)command {
 
 	self.callbackId = command.callbackId;
 	NSDictionary *options = [command.arguments objectAtIndex:0];
+	DLog(@"options:%@", options);
 
 	// Compiling options with defaults
 	NSString *title = [options objectForKey:@"title"] ?: @" ";
@@ -46,19 +70,10 @@
     // Loop through slots to define default value
     for(int i = 0; i < [self.items count]; i++) {
         NSDictionary *slot = [self.items objectAtIndex:i];
-        // Check for a default value
-        NSString *defaultValue = [NSString stringWithFormat:@"%@", [slot objectForKey:@"value"]];
-        if([slot objectForKey:@"data"] && defaultValue) {
-            // Loop through slot data
-            for(int j = 0; j < [[slot objectForKey:@"data"] count]; j++) {
-                NSDictionary *slotData = [[slot objectForKey:@"data"] objectAtIndex:j];
-                NSString *slotDataValue = [NSString stringWithFormat:@"%@", [slotData objectForKey:@"value"]];
-                // Check for a default value match
-                if([slotDataValue isEqualToString:defaultValue]) {
-                    [self.pickerView selectRow:j inComponent:i animated:NO];
-                }
-            }
-        }
+		if([slot objectForKey:@"value"]) {
+			int j = [self getRowWithValue:[NSString stringWithFormat:@"%@", [slot objectForKey:@"value"]] inComponent:i];
+			if(j != -1) [self.pickerView selectRow:j inComponent:i animated:NO];
+		}
     }
 
 	// Check if device is iPad as we won't be able to use an ActionSheet there
@@ -171,14 +186,45 @@
 	// Create a popover controller
 	self.popoverController = [[UIPopoverController alloc] initWithContentViewController:popoverContent];
 	self.popoverController.delegate = self;
-
+	
+	CGRect sourceRect;
+	UIDeviceOrientation curDevOrientation = [[UIDevice currentDevice] orientation];
+	if(UIDeviceOrientationIsLandscape(curDevOrientation)) {
+		// 1024-20 / 2 & 768 - 10
+		sourceRect = CGRectMake(502.0f, 758.0f, 20.0f, 20.0f);
+	} else {
+		sourceRect = CGRectMake(374.0f, 1014.0f, 20.0f, 20.0f);
+	}
+	 
 	//present the popover view non-modal with a
 	//refrence to the button pressed within the current view
-	[self.popoverController presentPopoverFromRect:CGRectMake(374.0f, 1014.0f, 20.0f, 20.0f)
+	[self.popoverController presentPopoverFromRect:sourceRect
 									   inView:self.webView.superview
 					 permittedArrowDirections:UIPopoverArrowDirectionAny
 									 animated:YES];
 
+}
+
+- (void)setValue:(CDVInvokedUrlCommand*)command
+{
+		
+	if(self.pickerView == nil) return;
+	
+	self.callbackId = command.callbackId;
+	NSDictionary *values = [command.arguments objectAtIndex:0];
+	DLog(@"values:%@", values);
+	
+	for (id key in values) {
+		NSString *value = [[values objectForKey:key] stringValue];
+		int i = [self getComponentWithName:key];
+		int j = [self getRowWithValue:value inComponent:i];
+		[self.pickerView selectRow:j inComponent:i animated:YES];
+	}
+	
+	// Create Plugin Result
+	CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:1];
+	[self writeJavascript: [pluginResult toSuccessCallbackString:self.callbackId]];
+	
 }
 
 //
@@ -202,7 +248,7 @@
 // Picker with segmentedControls dismissed with cancel
 - (void)segmentedControl:(UISegmentedControl *)segmentedControl didDismissWithCancelButton:(NSInteger)buttonIndex
 {
-	//NSLog(@"didDismissWithCancelButton:%d", buttonIndex);
+	DLog(@"didDismissWithCancelButton:%d", buttonIndex);
 	
 	// Check if device is iPad
 	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
@@ -216,7 +262,7 @@
 // Popover generic dismiss - iPad
 - (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController
 {
-	//NSLog(@"popoverControllerDidDismissPopover");
+	DLog(@"popoverControllerDidDismissPopover");
 	
 	// Retreive pickerView
 	NSArray *subviews = [self.popoverController.contentViewController.view subviews];
@@ -228,7 +274,7 @@
 // Popover emulated button-powered dismiss - iPad
 - (void)popoverController:(UIPopoverController *)popoverController dismissWithClickedButtonIndex:(NSInteger)buttonIndex animated:(Boolean)animated
 {
-	//NSLog(@"didDismissPopoverWithButtonIndex:%d", buttonIndex);
+	DLog(@"didDismissPopoverWithButtonIndex:%d", buttonIndex);
 	
 	// Manually dismiss the popover
 	[self.popoverController dismissPopoverAnimated:animated];
@@ -241,7 +287,7 @@
 // ActionSheet generic dismiss - iPhone
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
-	//NSLog(@"didDismissWithButtonIndex:%d", buttonIndex);
+	DLog(@"didDismissWithButtonIndex:%d", buttonIndex);
 	
 	// Retreive pickerView
     NSArray *subviews = [self.actionSheet subviews];
@@ -312,6 +358,9 @@
 
 // Tell the picker the width of each row for a given component
 - (CGFloat)pickerView:(UIPickerView *)pickerView widthForComponent:(NSInteger)component {
+	if([[self.items objectAtIndex:component] objectForKey:@"width"]) {
+		return [[[self.items objectAtIndex:component] objectForKey:@"width"] floatValue];
+	}
 	return 300.0f/[self.items count];
 }
 

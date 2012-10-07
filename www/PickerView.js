@@ -45,6 +45,28 @@
 		return cordova.exec(_callback, _callback, 'PickerView', 'create', [config]);
 	};
 
+	PickerView.prototype.setValue = function(values, options) {
+		options || (options = {});
+		var scope = options.scope || null;
+
+		var config = {
+			animated : options.animated || true,
+		};
+
+		// Force strings for items
+		/*for (var key in values) {
+			values[key] = values[key] + '';
+		}*/
+
+		var _callback = function() {
+			if(typeof callback == 'function') {
+				callback.apply(scope, arguments);
+			}
+		};
+
+		return cordova.exec(_callback, _callback, 'PickerView', 'setValue', [values, config]);
+	};
+
 	cordova.addConstructor(function() {
 		if(!window.plugins) window.plugins = {};
 		window.plugins.pickerView = new PickerView();

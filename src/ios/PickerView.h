@@ -23,5 +23,6 @@
 #pragma mark - Instance methods
 
 - (void)create:(CDVInvokedUrlCommand*)command;
+- (void)setValue:(CDVInvokedUrlCommand*)command;
 
 @end

@@ -61,6 +61,9 @@ Using this plugin requires [Cordova iOS](https://github.com/apache/incubator-cor
         console.warn('create(), arguments=' + Array.prototype.slice.call(arguments).join(', '));
     }, {style: 'black-opaque', doneButtonLabel: 'OK', cancelButtonLabel: 'Annuler'});
 
+    // Set values
+    pickerView.setValue({limit_speed: 100, road_type: 200});
+
 * Check [source](https://github.com/mgcrea/cordova-pickerview/tree/master/www/PickerView.js) for additional configuration.
 
 ## BUGS AND CONTRIBUTIONS ##
