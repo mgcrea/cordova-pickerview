@@ -145,7 +145,7 @@
 	NSDictionary *options = [command.arguments objectAtIndex:0];
 
 	NSString *doneButtonLabel = [options objectForKey:@"doneButtonLabel"] ?: @"Done";
-	NSString *cancelButtonLabel = [options objectForKey:@"cancelButtonLabel"] ?: @"Cancel";
+	//NSString *cancelButtonLabel = [options objectForKey:@"cancelButtonLabel"] ?: @"Cancel";
 
 	// Create a generic content view controller
 	UINavigationController* popoverContent = [[UINavigationController alloc] init];
@@ -166,15 +166,15 @@
 	 popoverContent.navigationItem.title = @"MY TITLE!";
 	 */
 
-	// Create segemented cancel button
-	UISegmentedControl *cancelButton = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObject:cancelButtonLabel]];
+	// Create segemented cancel button ~ not working on the iPad!
+	/*UISegmentedControl *cancelButton = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObject:cancelButtonLabel]];
 	cancelButton.momentary = YES;
 	cancelButton.frame = CGRectMake(5.0f, 7.0f, 50.0f, 30.0f);
 	cancelButton.segmentedControlStyle = UISegmentedControlStyleBar;
 	cancelButton.tintColor = [UIColor blackColor];
 	[cancelButton addTarget:self action:@selector(segmentedControl:didDismissWithCancelButton:) forControlEvents:UIControlEventValueChanged];
 	// Append close button
-	[popoverView addSubview:cancelButton];
+	[popoverView addSubview:cancelButton];*/
 
 	// Create segemented done button
 	UISegmentedControl *doneButton = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObject:doneButtonLabel]];
@@ -222,7 +222,7 @@
 	DLog(@"values:%@", values);
 
 	for (id key in values) {
-		NSString *value = [[values objectForKey:key] stringValue];
+		NSString *value = [NSString stringWithFormat:@"%@", [values objectForKey:key]];
 		int i = [self getComponentWithName:key];
 		int j = [self getRowWithValue:value inComponent:i];
 		[self.pickerView selectRow:j inComponent:i animated:YES];
