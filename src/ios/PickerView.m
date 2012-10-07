@@ -19,11 +19,18 @@
 
 @implementation PickerView
 
-@synthesize callbackId = _callbackId;
+@synthesize callbackIds = _callbackIds;
 @synthesize pickerView = _pickerView;
 @synthesize actionSheet = _actionSheet;
 @synthesize popoverController = _popoverController;
 @synthesize items = _items;
+
+- (NSMutableDictionary *)callbackIds {
+	if(_callbackIds == nil) {
+		_callbackIds = [[NSMutableDictionary alloc] init];
+	}
+	return _callbackIds;
+}
 
 - (int)getComponentWithName:(NSString * )name {
 	for(int i = 0; i < [self.items count]; i++) {
@@ -49,7 +56,7 @@
 
 - (void)create:(CDVInvokedUrlCommand*)command {
 
-	self.callbackId = command.callbackId;
+	[self.callbackIds setValue:command.callbackId forKey:@"create"];
 	NSDictionary *options = [command.arguments objectAtIndex:0];
 	DLog(@"options:%@", options);
 
@@ -134,7 +141,7 @@
 }
 
 -(void)createForIpad:(CDVInvokedUrlCommand*)command {
-	
+
 	NSDictionary *options = [command.arguments objectAtIndex:0];
 
 	NSString *doneButtonLabel = [options objectForKey:@"doneButtonLabel"] ?: @"Done";
@@ -186,7 +193,7 @@
 	// Create a popover controller
 	self.popoverController = [[UIPopoverController alloc] initWithContentViewController:popoverContent];
 	self.popoverController.delegate = self;
-	
+
 	CGRect sourceRect;
 	UIDeviceOrientation curDevOrientation = [[UIDevice currentDevice] orientation];
 	if(UIDeviceOrientationIsLandscape(curDevOrientation)) {
@@ -195,7 +202,7 @@
 	} else {
 		sourceRect = CGRectMake(374.0f, 1014.0f, 20.0f, 20.0f);
 	}
-	 
+
 	//present the popover view non-modal with a
 	//refrence to the button pressed within the current view
 	[self.popoverController presentPopoverFromRect:sourceRect
@@ -207,24 +214,24 @@
 
 - (void)setValue:(CDVInvokedUrlCommand*)command
 {
-		
+
 	if(self.pickerView == nil) return;
-	
-	self.callbackId = command.callbackId;
+
+	[self.callbackIds setValue:command.callbackId forKey:@"setValue"];
 	NSDictionary *values = [command.arguments objectAtIndex:0];
 	DLog(@"values:%@", values);
-	
+
 	for (id key in values) {
 		NSString *value = [[values objectForKey:key] stringValue];
 		int i = [self getComponentWithName:key];
 		int j = [self getRowWithValue:value inComponent:i];
 		[self.pickerView selectRow:j inComponent:i animated:YES];
 	}
-	
+
 	// Create Plugin Result
 	CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:1];
-	[self writeJavascript: [pluginResult toSuccessCallbackString:self.callbackId]];
-	
+	[self writeJavascript: [pluginResult toSuccessCallbackString:[self.callbackIds valueForKey:@"setValue"]]];
+
 }
 
 //
@@ -249,7 +256,7 @@
 - (void)segmentedControl:(UISegmentedControl *)segmentedControl didDismissWithCancelButton:(NSInteger)buttonIndex
 {
 	DLog(@"didDismissWithCancelButton:%d", buttonIndex);
-	
+
 	// Check if device is iPad
 	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
 		// Emulate a new delegate method
@@ -263,7 +270,7 @@
 - (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController
 {
 	DLog(@"popoverControllerDidDismissPopover");
-	
+
 	// Retreive pickerView
 	NSArray *subviews = [self.popoverController.contentViewController.view subviews];
 	UIPickerView *pickerView = [subviews objectAtIndex:0];
@@ -275,7 +282,7 @@
 - (void)popoverController:(UIPopoverController *)popoverController dismissWithClickedButtonIndex:(NSInteger)buttonIndex animated:(Boolean)animated
 {
 	DLog(@"didDismissPopoverWithButtonIndex:%d", buttonIndex);
-	
+
 	// Manually dismiss the popover
 	[self.popoverController dismissPopoverAnimated:animated];
 	// Retreive pickerView
@@ -288,7 +295,7 @@
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
 	DLog(@"didDismissWithButtonIndex:%d", buttonIndex);
-	
+
 	// Retreive pickerView
     NSArray *subviews = [self.actionSheet subviews];
 	UIPickerView *pickerView = [subviews objectAtIndex:1];
@@ -322,10 +329,10 @@
 	// Checking if cancel was clicked
 	if (buttonIndex == 0) {
 		//Call  the Failure Javascript function
-		[self writeJavascript: [pluginResult toErrorCallbackString:self.callbackId]];
+		[self writeJavascript: [pluginResult toErrorCallbackString:[self.callbackIds valueForKey:@"create"]]];
 	}else {
 		//Call  the Success Javascript function
-		[self writeJavascript: [pluginResult toSuccessCallbackString:self.callbackId]];
+		[self writeJavascript: [pluginResult toSuccessCallbackString:[self.callbackIds valueForKey:@"create"]]];
 	}
 
 }

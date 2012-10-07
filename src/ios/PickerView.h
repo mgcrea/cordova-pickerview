@@ -15,7 +15,7 @@
 
 #pragma mark - Properties
 
-@property (nonatomic, copy) NSString *callbackId;
+@property (nonatomic, retain) NSMutableDictionary *callbackIds;
 @property (nonatomic, strong) UIActionSheet *actionSheet;
 @property (nonatomic, strong) UIPopoverController *popoverController;
 @property (nonatomic, strong) NSArray *items;
