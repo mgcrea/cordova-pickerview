@@ -195,7 +195,7 @@
 	self.popoverController.delegate = self;
 
 	CGRect sourceRect;
-	UIDeviceOrientation curDevOrientation = [[UIDevice currentDevice] orientation];
+	UIDeviceOrientation curDevOrientation = [[UIApplication sharedApplication] statusBarOrientation];
 	if(UIDeviceOrientationIsLandscape(curDevOrientation)) {
 		// 1024-20 / 2 & 768 - 10
 		sourceRect = CGRectMake(502.0f, 758.0f, 20.0f, 20.0f);
