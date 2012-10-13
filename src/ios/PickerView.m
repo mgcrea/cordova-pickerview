@@ -164,7 +164,7 @@
 	}
 	
 	NSString *doneButtonLabel = [options objectForKey:@"doneButtonLabel"] ?: @"Done";
-	//NSString *cancelButtonLabexl = [options objectForKey:@"cancelButtonLabel"] ?: @"Cancel";
+	//NSString *cancelButtonLabel = [options objectForKey:@"cancelButtonLabel"] ?: @"Cancel";
 
 	// Create a generic content view controller
 	UINavigationController* popoverContent = [[UINavigationController alloc] init];
