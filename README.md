@@ -58,10 +58,12 @@ Using this plugin requires [Cordova iOS](https://github.com/apache/incubator-cor
     ];
     pickerView.create('', slots, function(selectedValues, buttonIndex) {
         console.warn('create(), arguments=' + Array.prototype.slice.call(arguments).join(', '));
-    }, {style: 'black-opaque', doneButtonLabel: 'OK', cancelButtonLabel: 'Annuler'});
+    }, {style: 'black-opaque', doneButtonLabel: 'OK', cancelButtonLabel: 'Annuler', sourceRect: [100.0, 100.0, 20.0, 20.0], arrowDirection: 'up'});
 
-    // Set values
-    pickerView.setValue({limit_speed: 100, road_type: 200});
+    // Set values after create
+    setTimeout(function() {
+        pickerView.setValue({limit_speed: 100, road_type: 200}, {animated: true});
+    }, 1000);
 
 * Check [source](https://github.com/mgcrea/cordova-pickerview/tree/master/www/PickerView.js) for additional configuration.
 

@@ -144,8 +144,27 @@
 
 	NSDictionary *options = [command.arguments objectAtIndex:0];
 
+	NSArray *sourceRectArray = [options objectForKey:@"sourceRect"];
+	CGRect sourceRect = CGRectNull;
+	if(sourceRectArray != nil && sourceRectArray.count == 4) {
+		sourceRect = CGRectFromString([NSString stringWithFormat: @"{{%f,%f},{%f,%f}}", [(NSNumber *)[sourceRectArray objectAtIndex:0] floatValue], [(NSNumber *)[sourceRectArray objectAtIndex:1] floatValue], [(NSNumber *)[sourceRectArray objectAtIndex:2] floatValue], [(NSNumber *)[sourceRectArray objectAtIndex:3] floatValue]]);
+	}
+	
+	// Support UIPopoverArrowDirection
+	NSString *arrowDirection = [options objectForKey:@"arrowDirection"] ?: @"any";
+	int permittedArrowDirections = UIPopoverArrowDirectionAny;
+	if([arrowDirection isEqualToString:@"up"]) {
+		permittedArrowDirections = UIPopoverArrowDirectionUp;
+	} else if([arrowDirection isEqualToString:@"right"]) {
+		permittedArrowDirections = UIPopoverArrowDirectionRight;
+	} else if([arrowDirection isEqualToString:@"down"]) {
+		permittedArrowDirections = UIPopoverArrowDirectionDown;
+	} else if([arrowDirection isEqualToString:@"left"]) {
+		permittedArrowDirections = UIPopoverArrowDirectionLeft;
+	}
+	
 	NSString *doneButtonLabel = [options objectForKey:@"doneButtonLabel"] ?: @"Done";
-	//NSString *cancelButtonLabel = [options objectForKey:@"cancelButtonLabel"] ?: @"Cancel";
+	//NSString *cancelButtonLabexl = [options objectForKey:@"cancelButtonLabel"] ?: @"Cancel";
 
 	// Create a generic content view controller
 	UINavigationController* popoverContent = [[UINavigationController alloc] init];
@@ -194,20 +213,20 @@
 	self.popoverController = [[UIPopoverController alloc] initWithContentViewController:popoverContent];
 	self.popoverController.delegate = self;
 
-	CGRect sourceRect;
+	
 	UIDeviceOrientation curDevOrientation = [[UIApplication sharedApplication] statusBarOrientation];
 	if(UIDeviceOrientationIsLandscape(curDevOrientation)) {
 		// 1024-20 / 2 & 768 - 10
-		sourceRect = CGRectMake(502.0f, 758.0f, 20.0f, 20.0f);
+		if(CGRectIsNull(sourceRect)) sourceRect = CGRectMake(502.0f, 758.0f, 20.0f, 20.0f);
 	} else {
-		sourceRect = CGRectMake(374.0f, 1014.0f, 20.0f, 20.0f);
+		if(CGRectIsNull(sourceRect)) sourceRect = CGRectMake(374.0f, 1014.0f, 20.0f, 20.0f);
 	}
 
 	//present the popover view non-modal with a
 	//refrence to the button pressed within the current view
 	[self.popoverController presentPopoverFromRect:sourceRect
 									   inView:self.webView.superview
-					 permittedArrowDirections:UIPopoverArrowDirectionAny
+					 permittedArrowDirections:permittedArrowDirections
 									 animated:YES];
 
 }

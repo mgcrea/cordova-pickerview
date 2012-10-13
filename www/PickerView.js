@@ -15,11 +15,13 @@
 		var scope = options.scope || null;
 
 		var config = {
-			title : title || ' ', // avoid blur with a !empty title
-			items : items || {},
-			style : options.style || 'default',
-			doneButtonLabel : options.doneButtonLabel || "Done",
-			cancelButtonLabel : options.cancelButtonLabel || "Cancel"
+			title: title || ' ', // avoid blur with a !empty title
+			items: items || {},
+			style: options.style || 'default',
+			sourceRect: options.sourceRect, // position for tablets
+			arrowDirection: options.arrowDirection || 'any',
+			doneButtonLabel: options.doneButtonLabel || 'Done',
+			cancelButtonLabel: options.cancelButtonLabel || 'Cancel'
 		};
 
 		// Force strings for items data text
