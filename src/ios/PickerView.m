@@ -219,13 +219,16 @@
 
 	[self.callbackIds setValue:command.callbackId forKey:@"setValue"];
 	NSDictionary *values = [command.arguments objectAtIndex:0];
-	DLog(@"values:%@", values);
+	NSDictionary *options = [command.arguments objectAtIndex:1];
+	bool animated = [options objectForKey:@"animated"] ? !![[options objectForKey:@"animated"] integerValue] : YES;
+	ALog(@"values:%@\noptions:%@", values, options);
+	ALog(@"%d", animated ? 1:0);
 
 	for (id key in values) {
 		NSString *value = [NSString stringWithFormat:@"%@", [values objectForKey:key]];
 		int i = [self getComponentWithName:key];
 		int j = [self getRowWithValue:value inComponent:i];
-		[self.pickerView selectRow:j inComponent:i animated:YES];
+		[self.pickerView selectRow:j inComponent:i animated:animated];
 	}
 
 	// Create Plugin Result

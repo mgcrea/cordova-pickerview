@@ -50,7 +50,7 @@
 		var scope = options.scope || null;
 
 		var config = {
-			animated : options.animated || true,
+			animated : options.hasOwnProperty('animated') ? !!options.animated : true,
 		};
 
 		// Force strings for items

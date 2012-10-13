@@ -31,6 +31,10 @@ var plugin = {
         window.plugins.pickerView.create('', slots, function(selectedValues, buttonIndex) {
             var args = Array.prototype.slice.call(arguments, 0);
         }, {style: 'black-opaque', doneButtonLabel: 'OK', cancelButtonLabel: 'Annuler'});
+
+        setTimeout(function() {
+            window.plugins.pickerView.setValue({limit_speed: 100, road_type: 300}, {animated: true});
+        }, 1000);
     }
 };
 
