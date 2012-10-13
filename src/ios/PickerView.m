@@ -221,8 +221,7 @@
 	NSDictionary *values = [command.arguments objectAtIndex:0];
 	NSDictionary *options = [command.arguments objectAtIndex:1];
 	bool animated = [options objectForKey:@"animated"] ? !![[options objectForKey:@"animated"] integerValue] : YES;
-	ALog(@"values:%@\noptions:%@", values, options);
-	ALog(@"%d", animated ? 1:0);
+	DLog(@"values:%@\noptions:%@", values, options);
 
 	for (id key in values) {
 		NSString *value = [NSString stringWithFormat:@"%@", [values objectForKey:key]];
