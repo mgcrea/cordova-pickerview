@@ -9,6 +9,8 @@ by [Olivier Louvignes](http://olouv.com)
 
 * There is a `Sencha Touch 2.0` plugin to easily leverage this plugin [here](https://github.com/mgcrea/sencha-touch-plugins/blob/master/CordovaPicker.js)
 
+[![Screenshot](https://raw.github.com/mgcrea/cordova-pickerview/master/samples/ios/sample.png)](https://github.com/mgcrea/cordova-pickerview/tree/master)
+
 ## SAMPLE PROJECT GENERATION ##
 
 You can generate a sample XCode project by running `samples/ios/create.sh` from the root of the repository. You will have to manually add the `ActionSheet` folder to Xcode (see step 2).
