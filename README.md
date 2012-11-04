@@ -3,13 +3,15 @@ by [Olivier Louvignes](http://olouv.com)
 
 ## DESCRIPTION ##
 
-* This plugin provides a simple way to use the `UIPickerView` native component from iOS. This plugin is built for Cordova >= v2.1.0 with ARC.
+* This plugin provides a simple way to use the `UIPickerView` native component from iOS.
+
+* This plugin is built for Cordova >= v2.1.0 with ARC.
 
 * There is a `Sencha Touch 2.0` plugin to easily leverage this plugin [here](https://github.com/mgcrea/sencha-touch-plugins/blob/master/CordovaPicker.js)
 
 ## SAMPLE PROJECT GENERATION ##
 
-You can generate a sample XCode project by running `samples/ios/create.sh` from the root of the repository.
+You can generate a sample XCode project by running `samples/ios/create.sh` from the root of the repository. You will have to manually add the `ActionSheet` folder to Xcode (see step 2).
 
 ## PLUGIN SETUP FOR IOS ##
 

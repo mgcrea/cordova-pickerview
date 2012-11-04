@@ -10,13 +10,13 @@
 
 	function PickerView() {}
 
-	PickerView.prototype.create = function(title, items, callback, options) {
+	PickerView.prototype.create = function(items, options, callback) {
 		options || (options = {});
 		var scope = options.scope || null;
 
 		var config = {
-			title: title || ' ', // avoid blur with a !empty title
 			items: items || {},
+			title: options.title || ' ', // avoid blur with a !empty title
 			style: options.style || 'default',
 			sourceRect: options.sourceRect, // position for tablets
 			arrowDirection: options.arrowDirection || 'any',
@@ -47,18 +47,13 @@
 		return cordova.exec(_callback, _callback, 'PickerView', 'create', [config]);
 	};
 
-	PickerView.prototype.setValue = function(values, options) {
+	PickerView.prototype.setValue = function(values, options, callback) {
 		options || (options = {});
 		var scope = options.scope || null;
 
 		var config = {
 			animated : options.hasOwnProperty('animated') ? !!options.animated : true,
 		};
-
-		// Force strings for items
-		/*for (var key in values) {
-			values[key] = values[key] + '';
-		}*/
 
 		var _callback = function() {
 			if(typeof callback == 'function') {

@@ -1,5 +1,6 @@
 
 var plugin = {
+
     createBasic: function() {
         var slots = [
             {name: 'foo', value: 'baz', data: [
@@ -8,11 +9,12 @@ var plugin = {
                 {value: 'baz', text: 'Displayed Baz'}
             ]}
         ];
-        window.plugins.pickerView.create('Title', slots, function(selectedValues, buttonIndex) {
+        window.plugins.pickerView.create(slots, {title: 'Title'}, function(selectedValues, buttonIndex) {
             var args = Array.prototype.slice.call(arguments, 0);
             console.log("actionSheet.createComplex:" + JSON.stringify(args));
         });
     },
+
     createComplex: function() {
         var slots = [
             {name : 'limit_speed', title: 'Speed', data : [
@@ -28,13 +30,23 @@ var plugin = {
                 {text: 'Depart', value: 300}
             ]}
         ];
-        window.plugins.pickerView.create('', slots, function(selectedValues, buttonIndex) {
+
+        var options = {
+            style: 'black-opaque',
+            doneButtonLabel: 'OK',
+            cancelButtonLabel: 'Annuler',
+            sourceRect: [100.0, 100.0, 20.0, 20.0], // iPad
+            arrowDirection: 'up' // iPad
+        };
+
+        window.plugins.pickerView.create(slots, options, function(selectedValues, buttonIndex) {
             var args = Array.prototype.slice.call(arguments, 0);
-        }, {style: 'black-opaque', doneButtonLabel: 'OK', cancelButtonLabel: 'Annuler', sourceRect: [100.0, 100.0, 20.0, 20.0], arrowDirection: 'up'});
+        });
 
         setTimeout(function() {
             window.plugins.pickerView.setValue({limit_speed: 100, road_type: 300}, {animated: true});
         }, 1000);
     }
+
 };
 
