@@ -323,8 +323,7 @@
   int pickerPosition;
 
   if (systemMajorVersion == 7){
-   //Order changed in ios?
-   pickerPosition = 2;
+    pickerPosition = 2;
   }else{
     pickerPosition = 1;
   }
