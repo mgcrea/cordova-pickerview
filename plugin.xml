@@ -38,9 +38,9 @@
 	<platform name="ios">
 		<plugins-plist key="PickerView" />
 
-		<header-file src="PickerView.h" />
+		<header-file src="src/ios/PickerView.h" />
 
-		<source-file src="PickerView.m" />
+		<source-file src="src/ios/PickerView.m" />
 	</platform>
 
 </plugin>
